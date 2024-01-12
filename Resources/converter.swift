@@ -1,5 +1,13 @@
 import Foundation
 
+// Custom units
+extension UnitPressure {
+  static let standardAtmospheres = UnitPressure(
+    symbol: "atm",
+    converter: UnitConverterLinear(coefficient: 101325)
+  )
+}
+
 // Helpers
 extension String {
   func removingPrefixes(_ prefixes: [String]) -> String {
@@ -319,6 +327,7 @@ let allMeasures: [MeasureInfo] = [
   MeasureInfo(names: ["bars"], unit: UnitPressure.bars),
   MeasureInfo(names: ["millibars"], unit: UnitPressure.millibars),
   MeasureInfo(names: ["millimiters of mercury"], unit: UnitPressure.millimetersOfMercury),
+  MeasureInfo(names: ["standard atmospheres", "atmospheres"], unit: UnitPressure.standardAtmospheres),
   MeasureInfo(names: ["pound per square inch"], unit: UnitPressure.poundsForcePerSquareInch),
 
   // Speed
@@ -453,13 +462,13 @@ let exactStartMeasure = startMeasures[0].measure
 let rawEnd = rawOperation
   .dropFirst(startMeasures[0].matchedChars)
   .trimmingCharacters(in: .whitespacesAndNewlines)
-  .removingPrefixes(["to ", "as ", "in "])  // Remove connection words  
+  .removingPrefixes(["to ", "as ", "in "])  // Remove connection words
 
 // When only one starting measure matches, convert
 let endMeasures = {
   // Measures which make sense to convert to
   let suitableEnds = allMeasures.filter {
-    type(of: exactStartMeasure.unit) == type(of: $0.unit)  // Same unit type, so we can convert
+    type(of: exactStartMeasure.unit).baseUnit() == type(of: $0.unit).baseUnit()  // Same unit type, so we can convert
       && exactStartMeasure.unit != $0.unit  // Remove starting measure
   }
 
