@@ -513,22 +513,25 @@ Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>default</key>
-				<string>3</string>
-				<key>placeholder</key>
-				<string></string>
-				<key>required</key>
-				<false/>
-				<key>trim</key>
+				<key>defaultvalue</key>
+				<integer>3</integer>
+				<key>markercount</key>
+				<integer>10</integer>
+				<key>maxvalue</key>
+				<integer>9</integer>
+				<key>minvalue</key>
+				<integer>0</integer>
+				<key>onlystoponmarkers</key>
+				<true/>
+				<key>showmarkers</key>
 				<true/>
 			</dict>
 			<key>description</key>
-			<string>Maximum fraction digits to include when rounding.
-Must be between 0 and 9.</string>
+			<string>Maximum fraction digits to include when rounding.</string>
 			<key>label</key>
 			<string>Decimal Places</string>
 			<key>type</key>
-			<string>textfield</string>
+			<string>slider</string>
 			<key>variable</key>
 			<string>decimal_places</string>
 		</dict>
