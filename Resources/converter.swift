@@ -461,7 +461,7 @@ let exactStartMeasure = startMeasures[0].measure
 let rawEnd = rawOperation
   .dropFirst(startMeasures[0].matchedChars)
   .trimmingCharacters(in: .whitespacesAndNewlines)
-  .removingPrefixes(["to ", "as ", "in "])  // Remove connection words  
+  .removingPrefixes(["to ", "as ", "in "])  // Remove connection words
 
 // When only one starting measure matches, convert
 let endMeasures = {
