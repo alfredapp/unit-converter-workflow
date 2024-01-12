@@ -11,6 +11,13 @@ extension String {
   }
 }
 
+extension UnitPressure {
+  static let atmosphere = UnitPressure(
+    symbol: "atm",
+    converter: UnitConverterLinear(coefficient: 101325)
+  )
+}
+
 struct ScriptFilterItem: Codable {
   let uid: String
   let title: String
@@ -319,6 +326,7 @@ let allMeasures: [MeasureInfo] = [
   MeasureInfo(names: ["bars"], unit: UnitPressure.bars),
   MeasureInfo(names: ["millibars"], unit: UnitPressure.millibars),
   MeasureInfo(names: ["millimiters of mercury"], unit: UnitPressure.millimetersOfMercury),
+  MeasureInfo(names: ["atmosphere"], unit: UnitPressure.atmosphere),
   MeasureInfo(names: ["pound per square inch"], unit: UnitPressure.poundsForcePerSquareInch),
 
   // Speed
@@ -458,10 +466,10 @@ let rawEnd = rawOperation
 // When only one starting measure matches, convert
 let endMeasures = {
   // Measures which make sense to convert to
-  let suitableEnds = allMeasures.filter {
-    type(of: exactStartMeasure.unit) == type(of: $0.unit)  // Same unit type, so we can convert
-      && exactStartMeasure.unit != $0.unit  // Remove starting measure
-  }
+    let suitableEnds = allMeasures.filter {
+        return type(of: exactStartMeasure.unit).baseUnit() == type(of: $0.unit).baseUnit()  // Same unit type, so we can convert
+        && exactStartMeasure.unit != $0.unit  // Remove starting measure
+    }
 
   // Filter further to targets that match, if any
   let desiredEnds = matchMeasures(from: rawEnd, in: suitableEnds).map { $0.measure }
