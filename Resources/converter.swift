@@ -469,7 +469,7 @@ let endMeasures = {
   // Measures which make sense to convert to
   let suitableEnds = allMeasures.filter {
     type(of: exactStartMeasure.unit).baseUnit() == type(of: $0.unit).baseUnit()  // Same unit type, so we can convert
-    && exactStartMeasure.unit != $0.unit  // Remove starting measure
+      && exactStartMeasure.unit != $0.unit  // Remove starting measure
   }
 
   // Filter further to targets that match, if any
