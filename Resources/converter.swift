@@ -327,8 +327,8 @@ let allMeasures: [MeasureInfo] = [
   MeasureInfo(names: ["bars"], unit: UnitPressure.bars),
   MeasureInfo(names: ["millibars"], unit: UnitPressure.millibars),
   MeasureInfo(names: ["millimiters of mercury"], unit: UnitPressure.millimetersOfMercury),
-  MeasureInfo(names: ["standard atmospheres", "atmospheres"], unit: UnitPressure.standardAtmospheres),
   MeasureInfo(names: ["pound per square inch"], unit: UnitPressure.poundsForcePerSquareInch),
+  MeasureInfo(names: ["standard atmospheres", "atmospheres"], unit: UnitPressure.standardAtmospheres),
 
   // Speed
   MeasureInfo(names: ["meters per second"], unit: UnitSpeed.metersPerSecond),
