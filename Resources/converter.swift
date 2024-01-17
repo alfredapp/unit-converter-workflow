@@ -391,7 +391,7 @@ let rawInput = CommandLine.arguments[1].trimmingCharacters(in: .whitespacesAndNe
 
 // Modify input to be expressed in feet if input is given in feet AND inches, otherwise send unmodified
 let interpretedInput = {
-  let feetInchRegex = #/^(?<feet>\d+(?:\.\d+)?)\s*(?:feet|foot|ft|'|′)\s*(?<inches>\d+(?:\.\d+)?)\s*(?:inches|in|''|″)(?<rest>.*)/#
+  let feetInchRegex = #/^(?<feet>\d+(?:\.\d+)?)\s*(?:feet|foot|ft|'|′)\s*(?<inches>\d+(?:\.\d+)?)\s*(?:inches|in|''|″)?(?<rest>.*)/#
 
   guard
     let feetInchValues = try? feetInchRegex.wholeMatch(in: rawInput),
@@ -400,7 +400,7 @@ let interpretedInput = {
   else { return rawInput }
 
   let inchesInFeet = Measurement(value: inches, unit: UnitLength.inches).converted(to: UnitLength.feet).value
-  return("\(feet + inchesInFeet) feet\(feetInchValues.rest)")
+  return("\(feet + inchesInFeet) feet \(feetInchValues.rest)")
 }()
 
 // Parse number value
