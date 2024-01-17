@@ -71,13 +71,16 @@ struct FormatMeasure {
 
   private static let decimalPlaces = Int(ProcessInfo.processInfo.environment["decimal_places"] ?? "3") ?? 3
   private static let splitFeet = (ProcessInfo.processInfo.environment["split_feet"] ?? "0") == "1"
+  private static let groupThousands = (ProcessInfo.processInfo.environment["thousands_group"] ?? "0") == "1"
 
   private static let formatter: NumberFormatter = {
-    let env: [String: String] = ProcessInfo.processInfo.environment
     let formatter: NumberFormatter = NumberFormatter()
 
     formatter.minimumFractionDigits = 0
     formatter.maximumFractionDigits = FormatMeasure.decimalPlaces
+    formatter.numberStyle = .decimal
+    formatter.hasThousandSeparators = groupThousands
+
     return formatter
   }()
 

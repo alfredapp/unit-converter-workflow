@@ -399,6 +399,8 @@ Type further to filter for target units. Connector words (“to”, “as”, �
 * &lt;kbd&gt;↩&lt;/kbd&gt;: Copy result to clipboard.
 * &lt;kbd&gt;⌘&lt;/kbd&gt;&lt;kbd&gt;↩&lt;/kbd&gt;: Paste result to frontmost app.
 
+Output format follows the Number Style in System Settings → General → Language &amp; Region. The thousands separator is optional and can be turned on in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
+
 Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/) or use the [Universal Action](https://www.alfredapp.com/help/features/universal-actions/) as shortcuts to convert results from Alfred’s [Calculator](https://www.alfredapp.com/help/features/calculator/), [Clipboard History](https://www.alfredapp.com/help/features/clipboard/), or selected text.
 
 ![Universal Action](images/about/ua.png)</string>
@@ -509,6 +511,25 @@ Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/
 			<string>checkbox</string>
 			<key>variable</key>
 			<string>copy_include_unit</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string>Include thousands separator</string>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string></string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>thousands_group</string>
 		</dict>
 		<dict>
 			<key>config</key>
