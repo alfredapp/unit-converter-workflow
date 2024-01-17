@@ -499,16 +499,35 @@ Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string>Include unit when copying output</string>
+				<string>Include unit when copying</string>
 			</dict>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Clipboard</string>
+			<string>Output Formatting</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
 			<string>copy_include_unit</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string>Decompose fractional feet into ′ and ″</string>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string></string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>split_feet</string>
 		</dict>
 		<dict>
 			<key>config</key>

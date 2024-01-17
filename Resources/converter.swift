@@ -69,12 +69,15 @@ struct MeasureInfo {
 struct FormatMeasure {
   let string: String
 
-  static let formatter: NumberFormatter = {
+  private static let decimalPlaces = Int(ProcessInfo.processInfo.environment["decimal_places"] ?? "3") ?? 3
+  private static let splitFeet = (ProcessInfo.processInfo.environment["split_feet"] ?? "0") == "1"
+
+  private static let formatter: NumberFormatter = {
     let env: [String: String] = ProcessInfo.processInfo.environment
     let formatter: NumberFormatter = NumberFormatter()
 
     formatter.minimumFractionDigits = 0
-    formatter.maximumFractionDigits = Int(env["decimal_places"]!)!
+    formatter.maximumFractionDigits = FormatMeasure.decimalPlaces
     return formatter
   }()
 
@@ -83,12 +86,12 @@ struct FormatMeasure {
   }
 
   init(value: Double, measure: MeasureInfo) {
-    // When dealing with feet, output as feet and inches
-    if measure.unit == UnitLength.feet {
+    // When dealing with feet, output as feet and inches if the option is set
+    if measure.unit == UnitLength.feet && FormatMeasure.splitFeet {
       let feet = Double(Int(value)) // Remove decimal part and convert back to Double
       let feetRemainder = value.truncatingRemainder(dividingBy: 1)
       let inches = Measurement(value: feetRemainder, unit: UnitLength.feet).converted(to: UnitLength.inches).value
-      self.string = "\(FormatMeasure.numberString(feet)) ft \(FormatMeasure.numberString(inches)) in"
+      self.string = "\(FormatMeasure.numberString(feet))′ \(FormatMeasure.numberString(inches))″"
       return
     }
 
