@@ -89,17 +89,43 @@ struct FormatMeasure {
   }
 
   init(value: Double, measure: MeasureInfo) {
-    // When dealing with feet, output as feet and inches if the option is set
-    if measure.unit == UnitLength.feet && FormatMeasure.splitFeet {
-      let feet = Double(Int(value)) // Remove decimal part and convert back to Double
-      let feetRemainder = value.truncatingRemainder(dividingBy: 1)
-      let inches = Measurement(value: feetRemainder, unit: UnitLength.feet).converted(to: UnitLength.inches).value
-      self.string = "\(FormatMeasure.numberString(feet))′ \(FormatMeasure.numberString(inches))″"
+    // When NOT dealing with feet OR NOT splitting, output as normal
+    guard measure.unit == UnitLength.feet && FormatMeasure.splitFeet else {
+      self.string = "\(FormatMeasure.numberString(value)) \(measure.symbol)"
       return
     }
 
-    // Otherwise output as normal
-    self.string = "\(FormatMeasure.numberString(value)) \(measure.symbol)"
+    // Dealing with feet and splitting
+    let feetRemainder = value.truncatingRemainder(dividingBy: 1)
+
+    // If there is no fraction, return feet
+    if feetRemainder == 0 {
+      self.string = "\(FormatMeasure.numberString(value))′"
+      return
+    }
+
+    // Parse values for feet and inches
+    let feet = value.rounded(.towardZero)
+    let inches = Measurement(value: feetRemainder, unit: UnitLength.feet).converted(to: UnitLength.inches).value
+
+    // If no feet, return inches
+    if feet == 0 {
+      self.string = "\(FormatMeasure.numberString(inches))″"
+      return
+    }
+
+    // Due to imprecision, round to avoid a situation like 0 feet 12 inches
+    let inchesRounded = Int(FormatMeasure.numberString(inches)) ?? 0
+
+    if inchesRounded > 0 && inchesRounded % 12 == 0 {
+      // Bump and return feet
+      self.string = "\(FormatMeasure.numberString(feet + 1))′"
+      return
+    }
+
+    // Return feet and inches
+    self.string = "\(FormatMeasure.numberString(feet))′ \(FormatMeasure.numberString(inches))″"
+    return
   }
 }
 
