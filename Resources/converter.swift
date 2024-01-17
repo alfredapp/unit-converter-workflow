@@ -78,11 +78,22 @@ struct FormatMeasure {
     return formatter
   }()
 
+  private static func numberString(_ number: Double) -> String {
+    return FormatMeasure.formatter.string(from: number as NSNumber) ?? String(number)
+  }
+
   init(value: Double, measure: MeasureInfo) {
-    let valueString: String =
-      FormatMeasure.formatter.string(from: value as NSNumber)
-      ?? String(value)
-    self.string = "\(valueString) \(measure.symbol)"
+    // When dealing with feet, output as feet and inches
+    if measure.unit == UnitLength.feet {
+      let feet = Double(Int(value)) // Remove decimal part and convert back to Double
+      let feetRemainder = value.truncatingRemainder(dividingBy: 1)
+      let inches = Measurement(value: feetRemainder, unit: UnitLength.feet).converted(to: UnitLength.inches).value
+      self.string = "\(FormatMeasure.numberString(feet)) ft \(FormatMeasure.numberString(inches)) in"
+      return
+    }
+
+    // Otherwise output as normal
+    self.string = "\(FormatMeasure.numberString(value)) \(measure.symbol)"
   }
 }
 
@@ -378,9 +389,23 @@ let allMeasures: [MeasureInfo] = [
 // Parse input
 let rawInput = CommandLine.arguments[1].trimmingCharacters(in: .whitespacesAndNewlines)
 
+// Modify input to be expressed in feet if input is given in feet AND inches, otherwise send unmodified
+let interpretedInput = {
+  let feetInchRegex = #/^(?<feet>\d+(?:\.\d+)?)\s*(?:feet|ft|'|′)\s*(?<inches>\d+(?:\.\d+)?)\s*(?:inches|in|''|″)(?<rest>.*)/#
+
+  guard
+    let feetInchValues = try? feetInchRegex.wholeMatch(in: rawInput),
+    let feet = Double(feetInchValues.feet),
+    let inches = Double(feetInchValues.inches)
+  else { return rawInput }
+
+  let inchesInFeet = Measurement(value: inches, unit: UnitLength.inches).converted(to: UnitLength.feet).value
+  return("\(feet + inchesInFeet) feet\(feetInchValues.rest)")
+}()
+
 // Parse number value
 guard
-  let rawNumber = rawInput.firstMatch(of: #/^(\d+(\.\d+)?)\D*/#)?.1,
+  let rawNumber = interpretedInput.firstMatch(of: #/^(\d+(\.\d+)?)\D*/#)?.1,
   let startNumber = Double(rawNumber)
 else {
   showItems([
@@ -398,7 +423,7 @@ else {
 }
 
 // Parse input minus number for starting measures
-let rawOperation = rawInput.dropFirst(rawNumber.count).trimmingCharacters(in: .whitespacesAndNewlines)
+let rawOperation = interpretedInput.dropFirst(rawNumber.count).trimmingCharacters(in: .whitespacesAndNewlines)
 let startMeasures = matchMeasures(from: rawOperation, in: allMeasures)
 
 // When no starting measures specified, show them all
