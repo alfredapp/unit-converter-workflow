@@ -286,7 +286,7 @@ let allMeasures: [MeasureInfo] = [
   MeasureInfo(names: ["nanometers"], unit: UnitLength.nanometers),
   MeasureInfo(names: ["picometers"], unit: UnitLength.picometers),
   MeasureInfo(names: ["inches", "''", "″"], unit: UnitLength.inches),
-  MeasureInfo(names: ["feet", "'", "′"], unit: UnitLength.feet),
+  MeasureInfo(names: ["feet", "foot", "'", "′"], unit: UnitLength.feet),
   MeasureInfo(names: ["yards"], unit: UnitLength.yards),
   MeasureInfo(names: ["miles"], unit: UnitLength.miles),
   MeasureInfo(names: ["scandinavian miles"], unit: UnitLength.scandinavianMiles),
@@ -391,7 +391,7 @@ let rawInput = CommandLine.arguments[1].trimmingCharacters(in: .whitespacesAndNe
 
 // Modify input to be expressed in feet if input is given in feet AND inches, otherwise send unmodified
 let interpretedInput = {
-  let feetInchRegex = #/^(?<feet>\d+(?:\.\d+)?)\s*(?:feet|ft|'|′)\s*(?<inches>\d+(?:\.\d+)?)\s*(?:inches|in|''|″)(?<rest>.*)/#
+  let feetInchRegex = #/^(?<feet>\d+(?:\.\d+)?)\s*(?:feet|foot|ft|'|′)\s*(?<inches>\d+(?:\.\d+)?)\s*(?:inches|in|''|″)(?<rest>.*)/#
 
   guard
     let feetInchValues = try? feetInchRegex.wholeMatch(in: rawInput),
