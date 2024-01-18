@@ -404,7 +404,7 @@ let rawInput = CommandLine.arguments[1].trimmingCharacters(in: .whitespacesAndNe
 
 // Modify input to be expressed in feet if input is given in feet AND inches, otherwise send unmodified
 let interpretedInput = {
-  let feetInchRegex = #/^(?<feet>\d+(?:\.\d+)?)\s*(?:feet|foot|ft|'|′)\s*(?<inches>\d+(?:\.\d+)?)\s*(?:inches|in|''|″)?(?<rest>.*)/#
+  let feetInchRegex = #/^(?<feet>\d*(?:\.\d+)?)\s*(?:feet|foot|ft|'|′)\s*(?<inches>\d*(?:\.\d+)?)\s*(?:inches|in|''|″)?(?<rest>.*)/#
 
   guard
     let feetInchValues = try? feetInchRegex.wholeMatch(in: rawInput),
@@ -418,7 +418,7 @@ let interpretedInput = {
 
 // Parse number value
 guard
-  let rawNumber = interpretedInput.firstMatch(of: #/^(\d+(\.\d+)?)\D*/#)?.1,
+  let rawNumber = interpretedInput.firstMatch(of: #/^(\d*(\.\d+)?)\D*/#)?.1,
   let startNumber = Double(rawNumber)
 else {
   showItems([
