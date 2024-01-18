@@ -28,6 +28,8 @@ struct ScriptFilterItem: Codable {
   let valid: Bool
 }
 
+// MeasureInfo
+// Refer to its extensions below as well
 struct MeasureInfo {
   let names: [String]
   let symbol: String
@@ -38,8 +40,10 @@ struct MeasureInfo {
     self.symbol = imperial ? "imperial \(unit.symbol)" : unit.symbol
     self.unit = unit
   }
+}
 
-  // Handle matching
+// MeasureInfo Matching
+extension MeasureInfo {
   enum MatchType {
     case none, partial, exact
   }
@@ -66,66 +70,43 @@ struct MeasureInfo {
   }
 }
 
-struct FormatMeasure {
-  let string: String
+// MeasureInfo Formatting
+extension MeasureInfo {
+  private static let decimalPlaces: Int = Int(ProcessInfo.processInfo.environment["decimal_places"] ?? "3") ?? 3
+  private static let splitFeet: Bool = (ProcessInfo.processInfo.environment["split_feet"] ?? "0") == "1"
+  private static let groupThousands: Bool = (ProcessInfo.processInfo.environment["thousands_group"] ?? "0") == "1"
 
-  private static let decimalPlaces = Int(ProcessInfo.processInfo.environment["decimal_places"] ?? "3") ?? 3
-  private static let splitFeet = (ProcessInfo.processInfo.environment["split_feet"] ?? "0") == "1"
-  private static let groupThousands = (ProcessInfo.processInfo.environment["thousands_group"] ?? "0") == "1"
-
-  private static let formatter: NumberFormatter = {
+  private static func numberToString(_ number: Double) -> String {
     let formatter: NumberFormatter = NumberFormatter()
 
     formatter.minimumFractionDigits = 0
-    formatter.maximumFractionDigits = FormatMeasure.decimalPlaces
+    formatter.maximumFractionDigits = MeasureInfo.decimalPlaces
     formatter.numberStyle = .decimal
-    formatter.hasThousandSeparators = groupThousands
+    formatter.hasThousandSeparators = MeasureInfo.groupThousands
 
-    return formatter
-  }()
-
-  private static func numberString(_ number: Double) -> String {
-    return FormatMeasure.formatter.string(from: number as NSNumber) ?? String(number)
+    return formatter.string(from: number as NSNumber) ?? String(number)
   }
 
-  init(value: Double, measure: MeasureInfo) {
+  func formatted(value: Double) -> String {
     // When NOT dealing with feet OR NOT splitting, output as normal
-    guard measure.unit == UnitLength.feet && FormatMeasure.splitFeet else {
-      self.string = "\(FormatMeasure.numberString(value)) \(measure.symbol)"
-      return
-    }
+    guard self.unit == UnitLength.feet && MeasureInfo.splitFeet else { return "\(MeasureInfo.numberToString(value)) \(self.symbol)" }
 
-    // Dealing with feet and splitting
-    let feetRemainder = value.truncatingRemainder(dividingBy: 1)
-
-    // If there is no fraction, return feet
-    if feetRemainder == 0 {
-      self.string = "\(FormatMeasure.numberString(value))′"
-      return
-    }
-
-    // Parse values for feet and inches
+    // Dealing with feet AND splitting
     let feet = value.rounded(.towardZero)
+    let feetRemainder = value.truncatingRemainder(dividingBy: 1)
     let inches = Measurement(value: feetRemainder, unit: UnitLength.feet).converted(to: UnitLength.inches).value
 
-    // If no feet, return inches
-    if feet == 0 {
-      self.string = "\(FormatMeasure.numberString(inches))″"
-      return
-    }
+    // Avoid a situation like "2 feet 12 inches" by formatting inches early
+    // If the result is "12", discard it and bump feet
+    let inchesFormatted = MeasureInfo.numberToString(inches)
+    if inchesFormatted == "12" { return "\(MeasureInfo.numberToString(feet + 1))′" }
 
-    // Due to imprecision, round to avoid a situation like 0 feet 12 inches
-    let inchesRounded = Int(FormatMeasure.numberString(inches)) ?? 0
-
-    if inchesRounded > 0 && inchesRounded % 12 == 0 {
-      // Bump and return feet
-      self.string = "\(FormatMeasure.numberString(feet + 1))′"
-      return
-    }
+    // If no inches then return feet, and vice-versa
+    if inches == 0 { return "\(MeasureInfo.numberToString(feet))′" }
+    if feet == 0 { return "\(MeasureInfo.numberToString(inches))″" }
 
     // Return feet and inches
-    self.string = "\(FormatMeasure.numberString(feet))′ \(FormatMeasure.numberString(inches))″"
-    return
+    return "\(MeasureInfo.numberToString(feet))′ \(inchesFormatted)″"
   }
 }
 
@@ -462,7 +443,7 @@ let startMeasures = matchMeasures(from: rawOperation, in: allMeasures)
 guard rawOperation.count > 0 else {
   let sfItems: [ScriptFilterItem] = allMeasures.map {
     let measure = $0
-    let formatted = FormatMeasure(value: startNumber, measure: measure).string
+    let formatted = measure.formatted(value: startNumber)
 
     return ScriptFilterItem(
       uid: measure.symbol,
@@ -498,7 +479,7 @@ guard startMeasures.count > 0 else {
 guard startMeasures.count < 2 else {
   let sfItems: [ScriptFilterItem] = startMeasures.map {
     let measure = $0.measure
-    let formatted = FormatMeasure(value: startNumber, measure: measure).string
+    let formatted = measure.formatted(value: startNumber)
 
     return ScriptFilterItem(
       uid: measure.symbol,
@@ -538,12 +519,12 @@ let endMeasures = {
 
 // Parse and convert
 let startDimension = Measurement(value: startNumber, unit: exactStartMeasure.unit)
-let formattedStartDimension = FormatMeasure(value: startDimension.value, measure: exactStartMeasure).string
+let formattedStartDimension = MeasureInfo(names: [], unit: startDimension.unit).formatted(value: startDimension.value)
 
 let sfItems: [ScriptFilterItem] = endMeasures.map {
   let measure = $0
   let converted = startDimension.converted(to: measure.unit)
-  let formatted = FormatMeasure(value: converted.value, measure: measure).string
+  let formatted = measure.formatted(value: converted.value)
 
   return ScriptFilterItem(
     uid: "\(exactStartMeasure.symbol) to \($0.unit.symbol)",
