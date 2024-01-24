@@ -366,12 +366,12 @@ let allMeasures: [MeasureInfo] = [
   MeasureInfo(names: ["degrees fahrenheit", "fahrenheit", "f"], unit: UnitTemperature.fahrenheit),
 
   // Volume
-  MeasureInfo(names: ["megaliters"], unit: UnitVolume.megaliters),
-  MeasureInfo(names: ["kiloliters"], unit: UnitVolume.kiloliters),
-  MeasureInfo(names: ["liters"], unit: UnitVolume.liters),
-  MeasureInfo(names: ["deciliters"], unit: UnitVolume.deciliters),
-  MeasureInfo(names: ["centiliters"], unit: UnitVolume.centiliters),
-  MeasureInfo(names: ["milliliters"], unit: UnitVolume.milliliters),
+  MeasureInfo(names: ["megaliters", "Ml"], unit: UnitVolume.megaliters),
+  MeasureInfo(names: ["kiloliters", "kl"], unit: UnitVolume.kiloliters),
+  MeasureInfo(names: ["liters", "l"], unit: UnitVolume.liters),
+  MeasureInfo(names: ["deciliters", "dl"], unit: UnitVolume.deciliters),
+  MeasureInfo(names: ["centiliters", "cl"], unit: UnitVolume.centiliters),
+  MeasureInfo(names: ["milliliters", "ml"], unit: UnitVolume.milliliters),
   MeasureInfo(names: ["cubic kilometers"], unit: UnitVolume.cubicKilometers),
   MeasureInfo(names: ["cubic meters"], unit: UnitVolume.cubicMeters),
   MeasureInfo(names: ["cubic decimeters"], unit: UnitVolume.cubicDecimeters),
