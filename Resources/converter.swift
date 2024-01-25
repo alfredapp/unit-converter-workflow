@@ -190,6 +190,10 @@ let allMeasures: [MeasureInfo] = [
   MeasureInfo(names: ["milligrams per deciliter"], unit: UnitConcentrationMass.milligramsPerDeciliter),
 
   // Duration
+  MeasureInfo(names: ["picoseconds"], unit: UnitDuration.seconds),
+  MeasureInfo(names: ["nanoseconds"], unit: UnitDuration.nanoseconds),
+  MeasureInfo(names: ["microseconds"], unit: UnitDuration.microseconds),
+  MeasureInfo(names: ["milliseconds"], unit: UnitDuration.milliseconds),
   MeasureInfo(names: ["seconds"], unit: UnitDuration.seconds),
   MeasureInfo(names: ["minutes"], unit: UnitDuration.minutes),
   MeasureInfo(names: ["hours"], unit: UnitDuration.hours),
