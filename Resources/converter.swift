@@ -75,13 +75,14 @@ extension MeasureInfo {
   private static let decimalPlaces: Int = Int(ProcessInfo.processInfo.environment["decimal_places"] ?? "3") ?? 3
   private static let splitFeet: Bool = (ProcessInfo.processInfo.environment["split_feet"] ?? "0") == "1"
   private static let groupThousands: Bool = (ProcessInfo.processInfo.environment["thousands_group"] ?? "0") == "1"
+  private static let scientificNotation: Bool = (ProcessInfo.processInfo.environment["scientific_notation"] ?? "0") == "1"
 
   private static func numberToString(_ number: Double) -> String {
     let formatter: NumberFormatter = NumberFormatter()
 
     formatter.minimumFractionDigits = 0
     formatter.maximumFractionDigits = MeasureInfo.decimalPlaces
-    formatter.numberStyle = .decimal
+    formatter.numberStyle = scientificNotation ? .scientific : .decimal
     formatter.hasThousandSeparators = MeasureInfo.groupThousands
 
     return formatter.string(from: number as NSNumber) ?? String(number)
