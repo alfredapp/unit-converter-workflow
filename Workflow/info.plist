@@ -215,6 +215,8 @@
 				<integer>1</integer>
 				<key>scriptfile</key>
 				<string>converter</string>
+				<key>skipuniversalaction</key>
+				<true/>
 				<key>subtext</key>
 				<string>{const:alfred_workflow_description}</string>
 				<key>title</key>
