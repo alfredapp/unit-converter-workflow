@@ -104,7 +104,7 @@ extension MeasureInfo {
 
     // If no inches then return feet, and vice-versa
     if inches == 0 { return "\(MeasureInfo.numberToString(feet))′" }
-    if feet == 0 { return "\(MeasureInfo.numberToString(inches))″" }
+    if feet == 0 { return "\(inchesFormatted)″" }
 
     // Return feet and inches
     return "\(MeasureInfo.numberToString(feet))′ \(inchesFormatted)″"
