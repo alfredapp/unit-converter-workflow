@@ -398,8 +398,8 @@ Type further to filter for target units. Connector words (“to”, “as”, �
 
 ![Filtering for ending unit](images/about/kbtom.png)
 
-* &lt;kbd&gt;↩&lt;/kbd&gt;: Copy result to clipboard.
-* &lt;kbd&gt;⌘&lt;/kbd&gt;&lt;kbd&gt;↩&lt;/kbd&gt;: Paste result to frontmost app.
+* &lt;kbd&gt;↩&lt;/kbd&gt; Copy result to clipboard.
+* &lt;kbd&gt;⌘&lt;/kbd&gt;&lt;kbd&gt;↩&lt;/kbd&gt; Paste result to frontmost app.
 
 Output format follows the Number Style in System Settings → General → Language &amp; Region. The thousands separator is optional and can be turned on in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
 
