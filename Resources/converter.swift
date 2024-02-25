@@ -380,7 +380,7 @@ let rawInput = CommandLine.arguments[1].trimmingCharacters(in: .whitespacesAndNe
 
 // Parse number value
 guard
-  let rawNumber = rawInput.firstMatch(of: #/^(\d+(\.\d+)?)\D*/#)?.1,
+  let rawNumber = rawInput.firstMatch(of: #/^(-?\d+(\.\d+)?)\D*/#)?.1,
   let startNumber = Double(rawNumber)
 else {
   showItems([
