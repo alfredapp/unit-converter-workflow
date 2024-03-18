@@ -394,7 +394,7 @@ Pressing &lt;kbd&gt;↩&lt;/kbd&gt; on a partial match triggers the autocomplete
 
 ![Showing all possible conversions](images/about/kbto.png)
 
-Type further to filter for target units. Connector words (“to”, “as”, “in”) are optional to help with readability. Rounding precision can be set in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
+Type further to filter for target units. Connector words (“to”, “as”, “in”) are optional to help with readability. Rounding precision and notation can be set in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
 
 ![Filtering for ending unit](images/about/kbtom.png)
 
