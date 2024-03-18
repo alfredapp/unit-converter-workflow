@@ -77,20 +77,20 @@ extension MeasureInfo {
   private static let groupThousands: Bool = (ProcessInfo.processInfo.environment["thousands_group"] ?? "0") == "1"
   private static let scientificNotation: Bool = (ProcessInfo.processInfo.environment["scientific_notation"] ?? "0") == "1"
 
-  private static func numberToString(_ number: Double) -> String {
+  private static func numberToString(_ number: Double, forceSimple: Bool) -> String {
     let formatter: NumberFormatter = NumberFormatter()
 
     formatter.minimumFractionDigits = 0
     formatter.maximumFractionDigits = MeasureInfo.decimalPlaces
-    formatter.numberStyle = scientificNotation ? .scientific : .decimal
-    formatter.hasThousandSeparators = MeasureInfo.groupThousands
+    formatter.numberStyle = scientificNotation && !forceSimple ? .scientific : .decimal
+    formatter.hasThousandSeparators = MeasureInfo.groupThousands && !forceSimple
 
     return formatter.string(from: number as NSNumber) ?? String(number)
   }
 
-  func formatted(value: Double) -> String {
+  func formatted(value: Double, forceSimple allowedNotation: Bool = false) -> String {
     // When NOT dealing with feet OR NOT splitting, output as normal
-    guard self.unit == UnitLength.feet && MeasureInfo.splitFeet else { return "\(MeasureInfo.numberToString(value)) \(self.symbol)" }
+    guard self.unit == UnitLength.feet && MeasureInfo.splitFeet else { return "\(MeasureInfo.numberToString(value, forceSimple: allowedNotation)) \(self.symbol)" }
 
     // Dealing with feet AND splitting
     let feet = value.rounded(.towardZero)
@@ -99,15 +99,15 @@ extension MeasureInfo {
 
     // Avoid a situation like "2 feet 12 inches" by formatting inches early
     // If the result is "12", discard it and bump feet
-    let inchesFormatted = MeasureInfo.numberToString(inches)
-    if inchesFormatted == "12" { return "\(MeasureInfo.numberToString(feet + 1))′" }
+    let inchesFormatted = MeasureInfo.numberToString(inches, forceSimple: allowedNotation)
+    if inchesFormatted == "12" { return "\(MeasureInfo.numberToString(feet + 1, forceSimple: allowedNotation))′" }
 
     // If no inches then return feet, and vice-versa
-    if inches == 0 { return "\(MeasureInfo.numberToString(feet))′" }
+    if inches == 0 { return "\(MeasureInfo.numberToString(feet, forceSimple: allowedNotation))′" }
     if feet == 0 { return "\(inchesFormatted)″" }
 
     // Return feet and inches
-    return "\(MeasureInfo.numberToString(feet))′ \(inchesFormatted)″"
+    return "\(MeasureInfo.numberToString(feet, forceSimple: allowedNotation))′ \(inchesFormatted)″"
   }
 }
 
@@ -446,15 +446,12 @@ let startMeasures = matchMeasures(from: rawOperation, in: allMeasures)
 
 // When no starting measures specified, show them all
 guard rawOperation.count > 0 else {
-  let sfItems: [ScriptFilterItem] = allMeasures.map {
-    let measure = $0
-    let formatted = measure.formatted(value: startNumber)
-
+  let sfItems: [ScriptFilterItem] = allMeasures.map { measure in
     return ScriptFilterItem(
       uid: measure.symbol,
-      title: formatted,
+      title: measure.formatted(value: startNumber),
       subtitle: measure.names[0].capitalized,
-      autocomplete: "\(formatted) to ",
+      autocomplete: "\(measure.formatted(value: startNumber, forceSimple: true)) to ",
       arg: nil,
       valid: false
     )
@@ -484,13 +481,12 @@ guard startMeasures.count > 0 else {
 guard startMeasures.count < 2 else {
   let sfItems: [ScriptFilterItem] = startMeasures.map {
     let measure = $0.measure
-    let formatted = measure.formatted(value: startNumber)
 
     return ScriptFilterItem(
       uid: measure.symbol,
-      title: formatted,
+      title: measure.formatted(value: startNumber),
       subtitle: measure.names[0].capitalized,
-      autocomplete: "\(formatted) to ",
+      autocomplete: "\(measure.formatted(value: startNumber, forceSimple: true)) to ",
       arg: nil,
       valid: false
     )
@@ -524,18 +520,17 @@ let endMeasures = {
 
 // Parse and convert
 let startDimension = Measurement(value: startNumber, unit: exactStartMeasure.unit)
-let formattedStartDimension = MeasureInfo(names: [], unit: startDimension.unit).formatted(value: startDimension.value)
+let formattedStartDimension = MeasureInfo(names: [], unit: startDimension.unit).formatted(value: startDimension.value, forceSimple: true)
 
-let sfItems: [ScriptFilterItem] = endMeasures.map {
-  let measure = $0
+let sfItems: [ScriptFilterItem] = endMeasures.map { measure in
   let converted = startDimension.converted(to: measure.unit)
   let formatted = measure.formatted(value: converted.value)
 
   return ScriptFilterItem(
-    uid: "\(exactStartMeasure.symbol) to \($0.unit.symbol)",
+    uid: "\(exactStartMeasure.symbol) to \(measure.unit.symbol)",
     title: formatted,
-    subtitle: "\(exactStartMeasure.names[0].capitalized) → \($0.names[0].capitalized)",
-    autocomplete: "\(formattedStartDimension) to \($0.symbol)",
+    subtitle: "\(exactStartMeasure.names[0].capitalized) → \(measure.names[0].capitalized)",
+    autocomplete: "\(formattedStartDimension) to \(measure.symbol)",
     arg: formatted,
     valid: true
   )
