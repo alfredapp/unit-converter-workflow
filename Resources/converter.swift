@@ -8,6 +8,13 @@ extension UnitPressure {
   )
 }
 
+extension UnitLength {
+  static let thousandthsOfAnInch = UnitLength(
+    symbol: "thou",
+    converter: UnitConverterLinear(coefficient: 0.000025399999999999999)
+  )
+}
+
 // Helpers
 extension String {
   func removingPrefixes(_ prefixes: [String]) -> String {
@@ -314,6 +321,7 @@ let allMeasures: [MeasureInfo] = [
   MeasureInfo(names: ["furlongs"], unit: UnitLength.furlongs),
   MeasureInfo(names: ["astronomical units"], unit: UnitLength.astronomicalUnits),
   MeasureInfo(names: ["parsecs"], unit: UnitLength.parsecs),
+  MeasureInfo(names: ["thousandths of an inch"], unit: UnitLength.thousandthsOfAnInch),
 
   // Mass
   MeasureInfo(names: ["kilograms"], unit: UnitMass.kilograms),
