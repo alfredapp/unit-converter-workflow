@@ -56,7 +56,7 @@ extension MeasureInfo {
   }
 
   func matches(_ searchTerm: String) -> MatchType {
-    // Check for sumbol matches
+    // Check for symbol matches
     let matchSymbol = self.symbol.hasPrefix(searchTerm)
 
     if matchSymbol {
