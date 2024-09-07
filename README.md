@@ -18,14 +18,14 @@ Pressing <kbd>↩&#xFE0E;</kbd> on a partial match triggers the autocomplete. Se
 
 ![Showing all possible conversions](Workflow/images/about/kbto.png)
 
-Type further to filter for target units. Connector words (“to”, “as”, “in”) are optional to help with readability. Rounding precision and notation can be set in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
+Type further to filter for target units. Connector words (“to”, “as”, “in”) are optional to help with readability.
 
 ![Filtering for ending unit](Workflow/images/about/kbtom.png)
 
 * <kbd>↩&#xFE0E;</kbd> Copy result to clipboard.
 * <kbd>⌘</kbd><kbd>↩&#xFE0E;</kbd> Paste result to frontmost app.
 
-Output format follows the Number Style in System Settings → General → Language & Region. The thousands separator is optional and can be turned on in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/).
+Rounding precision and output notation can be set in the [Workflow’s Configuration](https://www.alfredapp.com/help/workflows/user-configuration/). Output format follows the Number Style in System Settings → General → Language & Region.
 
 Configure the [Hotkey](https://www.alfredapp.com/help/workflows/triggers/hotkey/) or use the [Universal Action](https://www.alfredapp.com/help/features/universal-actions/) as shortcuts to convert results from Alfred’s [Calculator](https://www.alfredapp.com/help/features/calculator/), [Clipboard History](https://www.alfredapp.com/help/features/clipboard/), or selected text.
 
