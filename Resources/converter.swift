@@ -333,7 +333,7 @@ let allMeasures: [MeasureInfo] = [
   MeasureInfo(names: ["nanograms"], unit: UnitMass.nanograms),
   MeasureInfo(names: ["picograms"], unit: UnitMass.picograms),
   MeasureInfo(names: ["ounces"], unit: UnitMass.ounces),
-  MeasureInfo(names: ["pounds"], unit: UnitMass.pounds),
+  MeasureInfo(names: ["pounds", "lbs"], unit: UnitMass.pounds),
   MeasureInfo(names: ["stones"], unit: UnitMass.stones),
   MeasureInfo(names: ["metric tons"], unit: UnitMass.metricTons),
   MeasureInfo(names: ["short tons"], unit: UnitMass.shortTons),
